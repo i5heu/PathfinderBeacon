@@ -8,6 +8,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"strings"
 
 	"github.com/i5heu/PathfinderBeacon/pkg/auth"
 	"github.com/i5heu/PathfinderBeacon/pkg/utils"
@@ -90,6 +91,11 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Failed to split host port", err)
 		http.Error(w, "Failed to split host port", http.StatusInternalServerError)
 		return
+	}
+
+	// if host is from docker container, get the real ip via X-Real-Ip header
+	if strings.HasPrefix(host, "172.19.0.") && r.Header.Get("X-Real-Ip") != "" {
+		host = r.Header.Get("X-Real-Ip")
 	}
 
 	// verify the roomName with the roomSignature
