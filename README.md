@@ -85,6 +85,11 @@ I still need to do a lot of optimizations and security checks before being able 
 Also a lot of features are still missing and i would like to have a more decentralized approach to the system if i ever find the time for this project to implement it.  
 In the meantime pls use the public PathfinderBeacon at [pathfinderbeacon.net](https://pathfinderbeacon.net) that is also the default server for clients.
 
+## Potential Future Features and Ideas
+- [ ] Have a shared cache for the DNS server, so we can do load balancing and failover via NS records
+- [ ] Have private rooms in which the addresses are encrypted with the public key of the room
+- [ ] Have another way to identify nodes so a node can have a static name that is not dependent on the IP
+
 ## License
 PathfinderBeacon (c) 2024 Mia Heidenstedt and contributors  
    
