@@ -14,7 +14,7 @@
         }
 
         .container {
-            background-color: white;
+            background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -32,7 +32,7 @@
 
         .header p {
             font-size: 16px;
-            color: #666;
+            color: #000;
         }
 
         input[type="text"] {
@@ -64,9 +64,14 @@
             background-color: #0056b3;
         }
 
+        button#demoRoom {
+            display: block;
+        }
+
         .search {
             display: flex;
             gap: 10px;
+            margin: 20px 0;
         }
 
         #logo {
@@ -75,6 +80,16 @@
             height: auto;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        pre {
+            border: 1px solid #9a9a9a;
+            padding: 5px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.2rem;
+            height: 15rem;
         }
     </style>
 </head>
@@ -115,10 +130,10 @@
             the public DNS resolver from Cloudflare. PathfinderBeacon libraries will use your default DNS resolver.
             Which we advice not to be Cloudflare.
         </p>
+        <button type="button" id="demoRoom">Try Demo Room</button>
         <div class="search">
-
             <input type="text" placeholder="Enter node or room id">
-            <button type="button">Search</button>
+            <button id="searchButton" type="button">Search</button>
         </div>
         <div id="result" hidden></div>
         <h3>How to use</h3>
@@ -130,15 +145,27 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/dohjs@latest/dist/doh.min.js"></script>
 <script>
-    const searchButton = document.querySelector('button');
+    const searchButton = document.getElementById('searchButton');
     const searchInput = document.querySelector('input[type="text"]');
 
     const resolver = new doh.DohResolver('https://cloudflare-dns.com/dns-query');
+    const demoRoomButton = document.getElementById('demoRoom');
+    const demoRoom = "2ca43677688ea39acbca561dc5d9557d81ab513fa1898f1e978dc52e";
+    const resultDiv = document.getElementById('result');
 
-    searchButton.addEventListener('click', async () => {
+    searchButton.addEventListener('click', async () => Search());
+    demoRoomButton.addEventListener('click', async () => {
+        searchInput.value = demoRoom;
+        Search();
+    });
+
+    async function Search() {
         const searchValue = searchInput.value;
 
-
+        resultDiv.innerHTML = `
+        <h2>Results are Loading...</h2>
+        Please wait a moment.
+        <pre></pre>`;
 
         const room = lookupARecords(searchValue, "room");
         const node = lookupARecords(searchValue, "node");
@@ -147,34 +174,42 @@
         const nodeResult = await node;
 
         if (roomResult && roomResult.answers.length > 0) {
-            const resultDiv = document.getElementById('result');
             resultDiv.hidden = false;
             resultDiv.innerHTML = `
-                <h2>Results Room</h2>
-                You can see here all the nodes of the room. Search for a node to get the address.
-                <pre>
-${answersToString(roomResult.answers)}
-                </pre>
-            `;
+        <h2>Results Room</h2>
+        You can see here all the nodes of the room. Search for a node to get the address.
+<pre>
+${answersToLinkRoom(roomResult.answers)}
+</pre>`;
         } else {
-            const resultDiv = document.getElementById('result');
             resultDiv.hidden = false;
             resultDiv.innerHTML = `
-                <h2>Results Node</h2>
-                You can see here the addresses of the node.
-                <pre>
-${answersToString(nodeResult.answers)}
-                </pre>
-            `;
+        <h2>Results Node</h2>
+        You can see here the addresses of the node.
+<pre>
+${answersToLinkNode(nodeResult.answers)}
+</pre>`;
         }
+    }
 
-    });
+    async function SearchLink(id) {
+        searchInput.value = id;
+        Search();
+    }
 
-    function answersToString(answers) {
+    function answersToLinkRoom(answers) {
+        return answers.map(answer => {
+            return '<a href="javascript:void(0)" onclick="SearchLink(\'' + answer.data.toString() + '\');">' + answer.data.toString() + '</a>';
+        }).join('\n');
+    }
+
+    function answersToLinkNode(answers) {
         return answers.map(answer => {
             return answer.data.toString();
         }).join('\n');
     }
+
+
 
     async function lookupARecords(id, mode) {
         try {
