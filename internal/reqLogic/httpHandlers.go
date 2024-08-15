@@ -64,6 +64,7 @@ func validateAndParseRegisteringAddress(regString string) (utils.RegisteringNode
 
 func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
+		fmt.Println("Method not allowed")
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
@@ -73,13 +74,14 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		fmt.Println("Failed to read body", err)
-		http.Error(w, "Failed to read body", http.StatusInternalServerError)
+		http.Error(w, "Failed to read body", http.StatusBadRequest)
 		return
 	}
 
 	regNode, err := validateAndParseRegisteringAddress(string(body))
 	if err != nil {
-		http.Error(w, fmt.Errorf("Failed to parse body: %s ", err).Error(), http.StatusInternalServerError)
+		fmt.Println("Failed to parse body", err)
+		http.Error(w, fmt.Errorf("Failed to parse body: %s ", err).Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -93,7 +95,7 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 	// verify the roomName with the roomSignature
 	ok, err := auth.VerifyRoomSignature(regNode.Room, regNode.RoomSignature, regNode.PublicKey)
 	if err != nil {
-		http.Error(w, fmt.Errorf("Failed to verify room signature %w", err).Error(), http.StatusInternalServerError)
+		http.Error(w, fmt.Errorf("Failed to verify room signature %w", err).Error(), http.StatusBadRequest)
 		return
 	}
 	if !ok {
@@ -125,6 +127,7 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	fmt.Println("Node registered", hex.EncodeToString(nodeName[:]), "from IP", host)
 	w.WriteHeader(http.StatusOK)
 }
 
