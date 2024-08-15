@@ -18,15 +18,17 @@ type ReqLogic struct {
 	mu                      sync.RWMutex
 	store                   *cache.Cache
 	logger                  *zap.Logger
+	demoRoomName            string
 }
 
-func NewDNSHandler(rateLimitStoreTCP, rateLimitStore, globalRateLimitStore limiter.Store, store *cache.Cache, logger *zap.Logger) *ReqLogic {
+func NewDNSHandler(rateLimitStoreTCP, rateLimitStore, globalRateLimitStore limiter.Store, store *cache.Cache, logger *zap.Logger, demoRoomName string) *ReqLogic {
 	return &ReqLogic{
 		rateLimitStoreTCP:       rateLimitStoreTCP,
 		rateLimitStoreUDP:       rateLimitStore,
 		globalRateLimitStoreUDP: globalRateLimitStore,
 		store:                   store,
 		logger:                  logger,
+		demoRoomName:            demoRoomName,
 	}
 }
 

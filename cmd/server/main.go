@@ -23,6 +23,12 @@ func main() {
 	logger = logg.InitLogger()
 	defer logger.Sync()
 
+	// get env example room name
+	demoRoomName := os.Getenv("DEMO_ROOM_NAME")
+	if demoRoomName == "" {
+		demoRoomName = "NoDemoRoomName"
+	}
+
 	cacheStore := cache.NewCache(1000 * 1024 * 1024)
 
 	rateLimitStoreUDP, err := rate_limiter.NewRateLimiter(20, time.Minute*1)
@@ -40,7 +46,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handler := reqLogic.NewDNSHandler(rateLimitStoreTCP, rateLimitStoreUDP, globalRateLimitStoreUDP, cacheStore, logger)
+	handler := reqLogic.NewDNSHandler(rateLimitStoreTCP, rateLimitStoreUDP, globalRateLimitStoreUDP, cacheStore, logger, demoRoomName)
 
 	go func() {
 		reqLogic.StartDnsUdpServer(handler)

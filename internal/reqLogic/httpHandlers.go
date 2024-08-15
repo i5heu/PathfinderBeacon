@@ -103,7 +103,13 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 
 	nodeName := sha512.Sum512_224([]byte("node:" + host))
 
-	err = d.AddValue("room:"+regNode.Room, hex.EncodeToString(nodeName[:]), 3600)
+	// set ttl to infinite if it is the demo room
+	ttl := 3600
+	if d.demoRoomName == regNode.Room {
+		ttl = 0
+	}
+
+	err = d.AddValue("room:"+regNode.Room, hex.EncodeToString(nodeName[:]), ttl)
 	if err != nil {
 		fmt.Println("Failed to add value", err)
 		http.Error(w, "Failed to add value", http.StatusInternalServerError)
@@ -111,7 +117,7 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, addr := range regNode.Addresses {
-		err = d.AddValue("node:"+hex.EncodeToString(nodeName[:]), fmt.Sprintf("%s://%s:%d", addr.Protocol, addr.Ip, addr.Port), 3600)
+		err = d.AddValue("node:"+hex.EncodeToString(nodeName[:]), fmt.Sprintf("%s://%s:%d", addr.Protocol, addr.Ip, addr.Port), ttl)
 		if err != nil {
 			fmt.Println("Failed to add value", err)
 			http.Error(w, "Failed to add value", http.StatusInternalServerError)
