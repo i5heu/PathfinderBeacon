@@ -96,7 +96,7 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// if host is from docker container, get the real ip via X-Real-Ip header
-	if strings.HasPrefix(host, "172.") {
+	if strings.HasPrefix(host, "172.") || strings.HasPrefix(host, "192.") || strings.HasPrefix(host, "10.") || strings.HasPrefix(host, "127.") {
 		if r.Header.Get("X-Forwarded-Host") != "" {
 			host = r.Header.Get("X-Forwarded-Host")
 		}
