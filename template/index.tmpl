@@ -227,7 +227,8 @@
 
         resultDiv.innerHTML = `
         <h2>Results are Loading...</h2>
-        Please wait a moment.
+        On this Demo we are using the DNS over HTTPS (DoH) protocol provided by
+            the public DNS resolver from Cloudflare. Sometimes this thing seems to be slow altough PathfinderBeacon's answer are almost instant.
         <pre></pre>`;
 
         const room = lookupARecords(searchValue, "room");
