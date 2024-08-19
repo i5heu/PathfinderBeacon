@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/i5heu/PathfinderBeacon/pkg/cache"
 	"github.com/i5heu/PathfinderBeacon/pkg/utils"
 	"github.com/miekg/dns"
 )
@@ -15,6 +16,7 @@ func (d *ReqLogic) AddValue(key string, value string, ttl int) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
+	// get existing values so we can append to them
 	var values []string
 	existingValue, err := d.store.Get([]byte(key))
 	if err == nil {
@@ -49,6 +51,13 @@ func (d *ReqLogic) GetValues(key string) ([]string, error) {
 	}
 
 	return values, nil
+}
+
+func (d *ReqLogic) GetStats() cache.CacheStats {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+
+	return d.store.GetStats()
 }
 
 func rateLimit(ctx context.Context, w dns.ResponseWriter, d *ReqLogic) error {

@@ -28,8 +28,15 @@ Optionally you can also build and run a docker container with the following comm
 
 ```bash
 docker build -t pathfinderbeacon .
-docker run -p 53:53/udp 53:53/tcp 80:80/tcp pathfinderbeacon
+docker run -p 8053:53/udp 8053:53/tcp 8080:80/tcp pathfinderbeacon
 ```
+
+Then you can use the following commands to add a room and a node and 3 addresses to the index:
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"room":"2ca43677688ea39acbca561dc5d9557d81ab513fa1898f1e978dc52e","roomSignature":"dum9kNxCNEZR6+t66iqvzGh+/GD+uLbzss3u0WmgaAzFB9w1NOl89ORlHeT3nYw2eSnuil1rZ2NryP6mRIy7Z0t5PsLFhcHKR7qla1ccJU6Q+HfKWe6/735iQ+uEPRV9ClBz/69isnwYcS1dM1BlURV7A3K24ZLpnRYdVitxfrOHZkq6obrdvXgjww4qN4OSYiOc3KSpSKUSprTB4ylwSD1oGfcUVXdDLie3x/e+8Npy2Ir37jTnWt40sckzT6IvwAT8s/RLGlWxUrrlrtBMX0adlJ3VnpCFjya6FeM0ILGB6dCAQ8opgk+OolIELTnOZBH/1bnZcfrzWRMd0Wnxew==","publicKey":"LS0tLS1CRUdJTiBSU0EgUFVCTElDIEtFWS0tLS0tCk1JSUJDZ0tDQVFFQXNzTnNLYi9uRGZ6Ry9STStwUE1BcUpqZ08zaG1uS1hYdmY4TUlpRjJXYnZwUDFHZldFeWsKU3FFZ05jVkkvb2t2S0hQcS9Na2ltU2x3RGxFa1JYeE5raVBtU0hvR09lVkd4SmFuTFVQNEYxWlNXU2V4WVZaSgpLSi8xdmVVK3VEZEt4M1FqYlNtU1lWVTZoK2ZicXJqYjZQK3grZmgxSW5VRzEyNzZ0Y29ZZDF0bmVLYjlkdEVOClZ4NlBiQkgrdW5hZTRXQnBpL1M0d1F5WC95UlIzWXZpRHZJdkhmZlQ5MytpbkMwbVdIZGJUamZ3WG0wTjBUTHYKVE5pVEhaWFVpS1l3K0ZwYWZRV0Z5Y1RoWDZyd1laTk93RjFhMVR0RlJ0Z3pzZW15ZTNyMU5iM2QweGNubmpuZQpCS1hDMkdoVW53d3l2bmkweWZQQlRsYjVCb0pJcVhXUFd3SURBUUFCCi0tLS0tRU5EIFJTQSBQVUJMSUMgS0VZLS0tLS0K","addresses":[{"protocol":"tcp","ip":"128.140.37.196","port":80},{"protocol":"tcp","ip":"2a01:4f8:1c0c:68c1::1","port":80},{"protocol":"tcp","ip":"fe80::9400:2ff:fedc:4ea0","port":80},{"protocol":"tcp","ip":"128.140.37.196","port":80},{"protocol":"tcp","ip":"2a01:4f8:1c0c:68c1::1","port":80}]}' http://localhost:8080/register
+```
+
+```bash
 
 ## API
 

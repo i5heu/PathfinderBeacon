@@ -1,6 +1,7 @@
 package reqLogic
 
 import (
+	"html/template"
 	"log"
 	"os"
 	"sync"
@@ -19,9 +20,10 @@ type ReqLogic struct {
 	store                   *cache.Cache
 	logger                  *zap.Logger
 	demoRoomName            string
+	tmpl                    *template.Template
 }
 
-func NewDNSHandler(rateLimitStoreTCP, rateLimitStore, globalRateLimitStore limiter.Store, store *cache.Cache, logger *zap.Logger, demoRoomName string) *ReqLogic {
+func NewDNSHandler(rateLimitStoreTCP, rateLimitStore, globalRateLimitStore limiter.Store, store *cache.Cache, logger *zap.Logger, demoRoomName string, tmpl *template.Template) *ReqLogic {
 	return &ReqLogic{
 		rateLimitStoreTCP:       rateLimitStoreTCP,
 		rateLimitStoreUDP:       rateLimitStore,
@@ -29,6 +31,7 @@ func NewDNSHandler(rateLimitStoreTCP, rateLimitStore, globalRateLimitStore limit
 		store:                   store,
 		logger:                  logger,
 		demoRoomName:            demoRoomName,
+		tmpl:                    tmpl,
 	}
 }
 

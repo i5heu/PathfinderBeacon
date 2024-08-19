@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/i5heu/PathfinderBeacon/pkg/auth"
@@ -148,13 +150,26 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func (d *ReqLogic) Greet(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Request received", r.Method, r.URL.Path)
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "Hello World!")
-}
-
 func (d *ReqLogic) LandingPage(w http.ResponseWriter, r *http.Request) {
-	file := "template/index.html"
-	http.ServeFile(w, r, file)
+
+	stats := d.GetStats()
+
+	// Create data to pass to the template
+	data := struct {
+		Rooms     string
+		Nodes     string
+		Addresses string
+		HitCount  string
+	}{
+		Rooms:     strconv.FormatUint(stats.Rooms, 10),
+		Nodes:     strconv.FormatUint(stats.Nodes, 10),
+		Addresses: strconv.FormatUint(stats.Addresses, 10),
+		HitCount:  strconv.FormatInt(stats.HitCount, 10),
+	}
+
+	// Execute the template with the provided data
+	err := d.tmpl.Execute(w, data)
+	if err != nil {
+		log.Fatalf("Error executing template: %v", err)
+	}
 }

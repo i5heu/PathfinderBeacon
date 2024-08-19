@@ -2,6 +2,8 @@ package main
 
 import (
 	// "crypto/tls"
+
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -30,6 +32,7 @@ func main() {
 	}
 
 	cacheStore := cache.NewCache(1000 * 1024 * 1024)
+	defer cacheStore.Ticker.Stop()
 
 	rateLimitStoreUDP, err := rate_limiter.NewRateLimiter(20, time.Minute*1)
 	if err != nil {
@@ -46,7 +49,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	handler := reqLogic.NewDNSHandler(rateLimitStoreTCP, rateLimitStoreUDP, globalRateLimitStoreUDP, cacheStore, logger, demoRoomName)
+	tmpl, err := template.ParseFiles("template/index.tmpl")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	handler := reqLogic.NewDNSHandler(rateLimitStoreTCP, rateLimitStoreUDP, globalRateLimitStoreUDP, cacheStore, logger, demoRoomName, tmpl)
 
 	go func() {
 		reqLogic.StartDnsUdpServer(handler)
