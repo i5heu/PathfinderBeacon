@@ -99,8 +99,10 @@ In the meantime pls use the public PathfinderBeacon at [pathfinderbeacon.net](ht
 - [ ] Have another way to identify nodes so a node can have a static name that is not dependent on the IP
 - [ ] Maybe if we do properly signed messages, we can have a network of PathfinderBeacons that can share rooms and nodes with each other ( this would be pretty awesome and a long term solution many could get behind i think)
   - [ ] Maybe we could also add some kind of voting system so a network is better secured against malicious nodes, but this seams to be quite difficult to implement so it is useful against attacks. 
+  - [ ] If there is a list of trusted PathfinderBeacons it would be possible to load balance and failover between them.
+    - [ ] This would require a DHT and then there would be a problem with ratelimting against malicious PathfinderBeacons  - expect they are manually trussted, and then it would not be decentralized anymore.
 
 ## License
 PathfinderBeacon (c) 2024 Mia Heidenstedt and contributors  
    
-SPDX-License-Identifier: AGPL-3.0
+SPDX-License-Identifier: AGPL-3.0[text](about:blank#blocked)
