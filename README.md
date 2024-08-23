@@ -97,6 +97,8 @@ In the meantime pls use the public PathfinderBeacon at [pathfinderbeacon.net](ht
 - [ ] Have a shared cache for the DNS server, so we can do load balancing and failover via NS records
 - [ ] Have private rooms in which the addresses are encrypted with the public key of the room
 - [ ] Have another way to identify nodes so a node can have a static name that is not dependent on the IP
+- [ ] Maybe if we do properly signed messages, we can have a network of PathfinderBeacons that can share rooms and nodes with each other ( this would be pretty awesome and a long term solution many could get behind i think)
+  - [ ] Maybe we could also add some kind of voting system so a network is better secured against malicious nodes, but this seams to be quite difficult to implement so it is useful against attacks. 
 
 ## License
 PathfinderBeacon (c) 2024 Mia Heidenstedt and contributors  
