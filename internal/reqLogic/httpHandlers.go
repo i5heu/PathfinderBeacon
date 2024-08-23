@@ -10,7 +10,6 @@ import (
 	"net"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/i5heu/PathfinderBeacon/pkg/auth"
 	"github.com/i5heu/PathfinderBeacon/pkg/utils"
@@ -94,9 +93,17 @@ func (d *ReqLogic) RegisterNodeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to split host port", http.StatusInternalServerError)
 		return
 	}
+	parsedAddr := net.ParseIP(host)
+	if parsedAddr == nil {
+		fmt.Println("Failed to parse IP", err)
+		http.Error(w, "Failed to parse IP", http.StatusInternalServerError)
+		return
+	}
+
+	isPrivate := parsedAddr.IsPrivate()
 
 	// if host is from docker container, get the real ip via X-Real-Ip header
-	if strings.HasPrefix(host, "172.") || strings.HasPrefix(host, "192.") || strings.HasPrefix(host, "10.") || strings.HasPrefix(host, "127.") {
+	if isPrivate {
 		if r.Header.Get("X-Forwarded-Host") != "" {
 			host = r.Header.Get("X-Forwarded-Host")
 		}
