@@ -93,6 +93,7 @@ Also a lot of features are still missing and i would like to have a more decentr
 In the meantime pls use the public PathfinderBeacon at [pathfinderbeacon.net](https://pathfinderbeacon.net) that is also the default server for clients.
 
 ## Potential Future Features and Ideas
+- [ ] Loosen rate limitings for UDP when IP connects via TCP once to the server (for a short time) / this we we can handle bigger rooms and nodes
 - [ ] Have a shared cache for the DNS server, so we can do load balancing and failover via NS records
 - [ ] Have private rooms in which the addresses are encrypted with the public key of the room
 - [ ] Have another way to identify nodes so a node can have a static name that is not dependent on the IP
